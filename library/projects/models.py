@@ -3,22 +3,14 @@ from users.models import Profile
 from datetime import datetime
 
 
-class ProjectMember (models.Model):
-    member_profile = models.ForeignKey(Profile, verbose_name="Member")
-    MANAGER = 'MANAGER'
-    MEMBER = 'MEMBER'
-    MEMBER_ROLES = [
-        (MANAGER, 'Project Manager')
-        (MEMBER, 'Project Member')
-    ]
-    member_role = models.CharField(max_length=8, choices=MEMBER_ROLES, default=MEMBER)
 
 
 class Project (models.Model):
     project_id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=64, unique=True, blank=False, verbose_name='Project Name')
-    repo_link = models.URLField(verbose_name='Repository URL-link')
-    change_date = models.DateField(verbose_name='Change Date')
+    repo_link = models.URLField(verbose_name='Repository URL-link', blank=True)
+    change_date = models.DateField(verbose_name='Change Date', blank=True)
+    change_date_time = models.DateTimeField(verbose_name='Change DateTime', default=datetime.now())
     DRAFT = 'DRAFT'
     ACTIVE = 'ACTIVE'
     CLOSED = 'CLOSED'
@@ -29,11 +21,11 @@ class Project (models.Model):
     ]
     status = models.CharField(max_length=8, blank=False, choices=STATUS_LIST, default=DRAFT,
                               verbose_name='Project Status')
-    project_members = models.ManyToOneRel(ProjectMember)
 
 
     def save(self, *args, **kwargs):
         self.change_date = datetime.now()
+        self.change_date_time = datetime.now()
         super().save(*args, **kwargs)
 
 

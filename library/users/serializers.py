@@ -1,20 +1,19 @@
 from rest_framework.serializers import HyperlinkedModelSerializer
-from .models import User
+from .models import User, Profile
 
 
 class UserModelSerializer(HyperlinkedModelSerializer):
-   class Meta:
-       model = User
-       fields = ['username',
+    class Meta:
+        model = User
+        fields = ['username',
                  'email',
                  'first_name',
                  'last_name',
                  ]
 
-'''
-def update(self, instance):
-   instance.set_password(raw_password='init123')
-   instance.save()
 
-   return instance
-'''
+class ProfileModelSerializer(HyperlinkedModelSerializer):
+    user = UserModelSerializer()
+    class Meta:
+        model = Profile
+        fields = '__all__'

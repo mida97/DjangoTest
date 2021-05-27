@@ -6,18 +6,15 @@ from django.db.models.signals import post_save
 
 class User(AbstractUser):
     email = models.EmailField(max_length=64, unique=True, verbose_name='email address', blank=False)
-    test_name = models.CharField(verbose_name='test name', max_length=150, blank=True)
-
-
-    def save(self, *args, **kwargs):
-        if self.__new__():
-            self.set_password(raw_password='init123')
-        super().save(*args, **kwargs)
 
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     birth_date = models.DateField(null=True, blank=True)
+
+
+    def __str__(self):
+        return f'{self.user.first_name} {self.user.last_name}'
 
 
 @receiver(post_save, sender=User)

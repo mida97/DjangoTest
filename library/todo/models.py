@@ -5,11 +5,13 @@ from datetime import datetime
 
 
 class ToDo (models.Model):
-    todo_id = models.AutoField()
-    project = models.ForeignKey(Project)
-    assigned_to = models.ForeignKey(Profile, verbose_name='Assigned To')
+    project = models.ForeignKey(Project, on_delete=models.PROTECT)
+    assigned_to = models.ForeignKey(Profile, verbose_name='Assigned To', on_delete=models.PROTECT,
+                                    related_name='assigned_to_profile')
     description = models.CharField(max_length=255, verbose_name='Description')
-    created_by = models.ForeignKey(Profile, verbose_name='Created By')
+    created_by = models.ForeignKey(Profile, verbose_name='Created By', on_delete=models.PROTECT,
+                                   related_name='created_by_profile'
+                                   )
     create_date = models.DateField()
     plan_date = models.DateField()
     change_date = models.DateField()
@@ -19,7 +21,6 @@ class ToDo (models.Model):
 
     def make_done(self):
         self.complete_date = datetime.now()
-        self.change_date = datetime.now()
         self.is_done = True
         self.save()
 
